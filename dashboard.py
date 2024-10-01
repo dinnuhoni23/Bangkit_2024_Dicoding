@@ -1,134 +1,89 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Apply minimalist design with a light blue theme using Streamlit's config and CSS
-st.set_page_config(page_title="Bike Usage Analysis Dashboard", layout="wide")
+# Load dataset
+df = pd.read_csv('df_day_analisis.csv')
 
-# Custom CSS for a light blue minimalist design
-st.markdown("""
-    <style>
-    /* Center and minimize the width of the dashboard */
-    .block-container {
-        max-width: 800px;
-        margin: auto;
-        padding-top: 20px;
-    }
-    /* Light blue theme for headers and text */
-    h1, h2, h3, h4, h5, h6, p {
-        color: #87CEFA; /* Light blue color */
-    }
-    /* Adjust table and charts to have a minimalist look */
-    .stDataFrame, .stChart {
-        background-color: #E0F7FA;
-        border-radius: 8px;
-    }
-    /* Light blue buttons */
-    .stButton button {
-        background-color: #87CEFA;
-        color: white;
-        border-radius: 5px;
-    }
-    /* Minimal padding for checkboxes */
-    .stCheckbox {
-        margin-bottom: 15px;
-    }
-    /* Set all text alignment to horizontal */
-    h1, h2, h3, h4, h5, h6, p {
-        text-align: left;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# Convert date column to datetime
+df['date'] = pd.to_datetime(df['date'])
+df['year'] = df['year'].replace({0: 2011, 1: 2012})
 
-# Load the datasets (replace with actual paths if needed)
-df_day = pd.read_csv('df_day_analisis.csv')
-df_hour = pd.read_csv('df_hour_analisis.csv')
+# Sidebar - filters
+st.sidebar.header("Filter Data")
+year_selected = st.sidebar.multiselect("Pilih Tahun", df['year'].unique(), default=df['year'].unique())
+month_selected = st.sidebar.multiselect("Pilih Bulan", df['month'].unique(), default=df['month'].unique())
+workday_filter = st.sidebar.radio("Pilih Hari Kerja atau Libur", ['Semua', 'Hari Kerja', 'Hari Libur'])
 
-# Set the title for the dashboard
-st.title("🚴‍♂️ Bike Usage Analysis Dashboard")
+# Filter data
+df_filtered = df[(df['year'].isin(year_selected)) & (df['month'].isin(month_selected))]
 
-# Section 1: Main Factors Influencing Bike Usage at Different Times
-st.header("1. Main Factors Influencing Bike Usage at Different Times")
+# Filter for working day or weekend
+if workday_filter == 'Hari Kerja':
+    df_filtered = df_filtered[df_filtered['workingday'] == 1]
+elif workday_filter == 'Hari Libur':
+    df_filtered = df_filtered[df_filtered['workingday'] == 0]
 
-# Introduction to this section
+# Dashboard title
+st.title("Dashboard Analisis Penyewaan Sepeda")
+
+# Total usage by day (line plot)
+st.subheader("Total Penggunaan Sepeda per Hari")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(x='date', y='total', data=df_filtered, ax=ax)
+plt.xticks(rotation=45)
+st.pyplot(fig)
+
+# Usage by weather condition (bar plot)
+st.subheader("Penggunaan Sepeda Berdasarkan Kondisi Cuaca")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.barplot(x='weather_situation', y='total', data=df_filtered, estimator='mean', ax=ax)
+plt.xticks(rotation=45)
+st.pyplot(fig)
+
+# Working day vs weekend (box plot)
+st.subheader("Penggunaan Sepeda Hari Kerja vs Akhir Pekan")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.boxplot(x='workingday', y='total', data=df_filtered)
+ax.set_xticklabels(['Akhir Pekan', 'Hari Kerja'])
+st.pyplot(fig)
+
+# Usage by season (bar plot)
+st.subheader("Penggunaan Sepeda Berdasarkan Musim")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.barplot(x='season', y='total', data=df_filtered, estimator='mean', ax=ax)
+st.pyplot(fig)
+
+# Monthly trend in bike usage (line plot)
+st.subheader("Tren Penggunaan Sepeda Berdasarkan Bulan")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(x='month', y='total', data=df_filtered, marker='o', ax=ax)
+st.pyplot(fig)
+
+# Usage statistics (descriptive statistics)
+st.subheader("Statistik Penggunaan Sepeda")
+st.write(df_filtered[['casual', 'registered', 'total']].describe())
+
+# Pie chart: Casual vs Registered usage
+st.subheader("Proporsi Penggunaan Kasual vs Terdaftar")
+casual_vs_registered = df_filtered[['casual', 'registered']].sum()
+fig, ax = plt.subplots(figsize=(7, 7))
+ax.pie(casual_vs_registered, labels=['Kasual', 'Terdaftar'], autopct='%1.1f%%', colors=['lightblue', 'orange'], startangle=90)
+ax.axis('equal')
+st.pyplot(fig)
+
+# Yearly trends (line plot)
+st.subheader("Penggunaan Sepeda Berdasarkan Tahun")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(x='year', y='total', data=df_filtered, marker='o', ax=ax)
+st.pyplot(fig)
+
+# Additional insights and conclusions
+st.subheader("Kesimpulan")
 st.write("""
-In this section, we explore how factors like temperature, humidity, and time of day affect bike usage.
-The data is presented on an hourly basis to understand how these factors impact the number of casual and registered users.
-""")
-
-# Select features for analysis
-selected_factors = st.multiselect(
-    "Select factors to analyze (e.g., Temperature, Humidity, etc.):",
-    ['temp', 'humidity', 'windspeed', 'total'],
-    default=['temp', 'humidity', 'total']
-)
-
-# Group hourly data by the selected factors and plot
-st.subheader("Hourly Bike Usage by Selected Factors")
-if selected_factors:
-    # Group data by hour and calculate the mean for selected factors
-    grouped_hourly = df_hour[['hour'] + selected_factors].groupby('hour').mean()
-
-    # Plot the data
-    st.line_chart(grouped_hourly)
-
-    # Provide an interpretation of the results
-    st.write("""
-    The line chart above shows the variation in bike usage across different hours of the day, along with the selected factors.
-    Higher bike usage may correspond to specific temperatures or humidity levels, showing clear patterns throughout the day.
-    """)
-
-# Optional: Display raw data
-if st.checkbox("Show raw hourly data"):
-    st.write(df_hour)
-
-# Section 2: Variation in Bike Usage Patterns Between Weekdays and Weekends
-st.header("2. Variation in Bike Usage Patterns Between Weekdays and Weekends")
-
-# Introduction to this section
-st.write("""
-This section analyzes how bike usage patterns vary between weekdays and weekends. By comparing the total usage on workdays vs weekends,
-we can see if people tend to use bikes more during leisure time or commuting periods.
-""")
-
-# Create a new column to differentiate weekdays from weekends
-df_day['is_weekend'] = df_day['weekday'].apply(lambda x: 1 if x in ['Sat', 'Sun'] else 0)
-
-# Group data by weekdays (is_weekend) and calculate average total bike usage
-usage_by_day_type = df_day.groupby('is_weekend')['total'].mean()
-
-# Plot weekday vs weekend usage
-st.subheader("Average Bike Usage: Weekdays vs Weekends")
-st.bar_chart(usage_by_day_type)
-
-# Add insights based on the analysis
-st.write("""
-From the bar chart, we can observe the difference in bike usage between weekdays and weekends. 
-Generally, weekends may see higher casual usage due to leisure activities, while weekdays may show increased usage due to commuting.
-""")
-
-# Optional: Display raw data for daily analysis
-if st.checkbox("Show raw daily data"):
-    st.write(df_day)
-
-# Section 3: Additional Analysis - Usage by Weather Conditions
-st.header("3. Additional Analysis: Usage by Weather Conditions")
-
-# Group data by weather situation to see how different weather conditions affect bike usage
-st.write("""
-Bike usage can also be affected by weather conditions. Below is an analysis of bike usage based on different weather situations (e.g., clear, misty, cloudy).
-""")
-
-# Group by weather condition
-weather_usage = df_day.groupby('weather_situation')['total'].mean()
-
-# Plot usage by weather conditions
-st.bar_chart(weather_usage)
-
-# Conclusion section
-st.header("Conclusion")
-st.write("""
-From this dashboard, we can conclude that both environmental factors like temperature, humidity, and time of day, 
-as well as situational factors like the type of day (weekday vs weekend) and weather, significantly influence bike usage patterns.
-Understanding these trends can help in optimizing bike-sharing services or urban planning for better cycling infrastructure.
+    - **Pengaruh Cuaca**: Penggunaan sepeda cenderung lebih tinggi pada cuaca cerah atau berawan sebagian.
+    - **Musim**: Penggunaan sepeda meningkat selama musim panas dan menurun selama musim dingin.
+    - **Hari Kerja vs Akhir Pekan**: Pengguna terdaftar lebih banyak menggunakan sepeda pada hari kerja, sedangkan pengguna kasual lebih banyak bersepeda di akhir pekan.
+    - **Tren Bulanan**: Bulan-bulan musim panas seperti Juni hingga September menunjukkan penggunaan sepeda yang lebih tinggi.
 """)
