@@ -63,37 +63,37 @@ Link: ### https://penyewaan-sepeda-dashboard-dicoding-2024.streamlit.app/
    .\venv\Scripts\activate
 
 # 4. Screenshots
-a. Judul pada Streamlit
+## a. Judul pada Streamlit
 ![image](https://github.com/user-attachments/assets/05b7cfb6-e44c-4a85-bd2f-b7fcb34e5f55)
 
-b. Sidebar
+## b. Sidebar
 ![image](https://github.com/user-attachments/assets/b80b4188-f45c-400f-835b-160f0d1bdc7a)
 
-c. Total Penggunaan Sepeda per Hari
+## c. Total Penggunaan Sepeda per Hari
 ![image](https://github.com/user-attachments/assets/048386c3-923d-46a2-b10e-0d7d1f9b2ff3)
 
-d. Penggunaan Sepeda Berdasarkan Kondisi Cuaca
+## d. Penggunaan Sepeda Berdasarkan Kondisi Cuaca
 ![image](https://github.com/user-attachments/assets/34099dd1-1881-4ef4-a1fa-5d681c34b8e6)
 
-e. Penggunaan Sepeda Hari Kerja vs Akhir Pekan
+## e. Penggunaan Sepeda Hari Kerja vs Akhir Pekan
 ![image](https://github.com/user-attachments/assets/da5b2177-b165-4687-9033-40d48dbde1c7)
 
-f. Penggunaan Sepeda Berdasarkan Musim
+## f. Penggunaan Sepeda Berdasarkan Musim
 ![image](https://github.com/user-attachments/assets/fc13ffa6-e068-44ab-82d3-56e8c7d76cd5)
 
-g. Tren Penggunaan Sepeda Berdasarkan Bulan
+## g. Tren Penggunaan Sepeda Berdasarkan Bulan
 ![image](https://github.com/user-attachments/assets/8c8367a5-6584-4a65-8d82-ac0208cb00c4)
 
-h. Statistik Penggunaan Sepeda
+## h. Statistik Penggunaan Sepeda
 ![image](https://github.com/user-attachments/assets/7aa5c199-d8dc-47d2-99c0-8d7ca4776c2d)
 
-i. Proporsi Penggunaan Kasual vs Terdaftar
+## i. Proporsi Penggunaan Kasual vs Terdaftar
 ![image](https://github.com/user-attachments/assets/73d12a8b-4279-4c67-b70a-20425a75b1fc)
 
-j. Penggunaan Sepeda Berdasarkan Tahun
+## j. Penggunaan Sepeda Berdasarkan Tahun
 ![image](https://github.com/user-attachments/assets/3f2c418a-cbd8-446d-be9a-4ee145cbebe9)
 
-k. Kesimpulan
+## k. Kesimpulan
 ![image](https://github.com/user-attachments/assets/1b55c96a-4aa0-431a-85da-8417a9682a3f)
 
 
