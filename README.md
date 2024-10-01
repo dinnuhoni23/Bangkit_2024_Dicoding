@@ -1,7 +1,7 @@
 # Bangkit_2024_Dicoding
 # Bike Usage Analysis Dashboard
 Proyek ini bertujuan untuk menyelesaikan course pada Dicoding yaitu, "Belajar Analisis Data dengan Python". Proyek ini telah dianalisis menggunakan dataset yang telah disediakan oleh pihak Dicoding, kemudian di implementasikan pada Streamlit.
-Link: ## https://penyewaan-sepeda-dashboard-dicoding-2024.streamlit.app/
+Link: https://penyewaan-sepeda-dashboard-dicoding-2024.streamlit.app/
 
 # 1. Struktur File
 
