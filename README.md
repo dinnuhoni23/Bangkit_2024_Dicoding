@@ -58,9 +58,17 @@ Link: https://penyewaan-sepeda-dashboard-dicoding-2024.streamlit.app/
    - Buat file `requirements.txt` dan install dengan `pip install -r requirements.txt`.
 3. **Persiapkan Dataset**: Simpan file CSV dalam folder yang sama dengan `dashboard.py` atau `main.py`.
 4. **Jalankan Dashboard**:
-   - Aktifkan virtual environment dengan perintah:
-   ```bash
-   .\venv\Scripts\activate
+```
+.\venv\Scripts\activate
+```
+- Jika sudah masuk ke virtual environment, jalankan Streamlit dengan perintah:
+```
+streamlit run main.py
+```
+- Jika menggunakan `dashboard.py`, ubah perintahnya menjadi:
+```
+streamlit run dashboard.py
+```
 
 # 4. Screenshots
 ## a. Judul pada Streamlit
